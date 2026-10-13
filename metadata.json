@@ -1,0 +1,6 @@
+{
+  "name": "Resume-to-Animated-Portfolio Generator",
+  "description": "AI-powered resume parser and static permanent animated portfolio generator with versioning and 7-day privacy auto-cleanup.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

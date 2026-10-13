@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.25;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.25);
+    filter: drop-shadow(0 0 4px currentColor);
+  }
+}
+
+@keyframes shootingStar {
+  0% {
+    transform: translate(-100px, -100px) rotate(35deg) scaleX(0.2);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+    transform: translate(0px, 0px) rotate(35deg) scaleX(1);
+  }
+  85% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(800px, 500px) rotate(35deg) scaleX(0.1);
+    opacity: 0;
+  }
+}
+
+@keyframes auroraFloat {
+  0%, 100% {
+    transform: translateY(0) scaleY(1) rotate(0deg);
+    opacity: 0.25;
+  }
+  50% {
+    transform: translateY(-20px) scaleY(1.15) rotate(1.5deg);
+    opacity: 0.45;
+  }
+}
+
+@keyframes celestialRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes voiceWaveUnderline {
+  0% {
+    background-size: 0% 3px;
+  }
+  100% {
+    background-size: 100% 3px;
+  }
+}
+
+@keyframes activePulseBorder {
+  0%, 100% {
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.6), 0 0 24px rgba(245, 158, 11, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.9), 0 0 36px rgba(245, 158, 11, 0.4);
+  }
+}
+
+.speaking-active-card {
+  animation: activePulseBorder 2s ease-in-out infinite;
+  border-color: rgba(245, 158, 11, 0.8) !important;
+}
+
+.speaking-word-highlight {
+  background-image: linear-gradient(to right, #f59e0b, #fbbf24);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 3px;
+  border-radius: 2px;
+  color: #fbbf24 !important;
+  text-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
+}

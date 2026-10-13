@@ -1,0 +1,651 @@
+{
+  "users": [
+    {
+      "id": "usr_creator",
+      "email": "laksanayuvaraj6@gmail.com",
+      "name": "Laksana Yuvaraj",
+      "username": "laksanayuvaraj",
+      "isCreator": true,
+      "canonicalPortfolioId": "port_sample_dev"
+    },
+    {
+      "id": "usr_default",
+      "email": "user@example.com",
+      "name": "Alex Rivers",
+      "username": "alexrivers",
+      "canonicalPortfolioId": "port_sample_dev"
+    }
+  ],
+  "resumes": [
+    {
+      "id": "res_0b09009d",
+      "userId": "usr_default",
+      "portfolioVersionId": "port_72e33848",
+      "fileName": "resume_upd.pdf",
+      "fileSize": 707091,
+      "uploadedAt": "2026-09-12T05:11:31.145Z",
+      "expiresAt": "2026-09-19T05:11:31.145Z",
+      "isDeleted": false,
+      "filePath": "/app/applet/uploads/resume-1789189859267-389314894.pdf"
+    },
+    {
+      "id": "res_sample_1",
+      "userId": "usr_creator",
+      "portfolioVersionId": "port_sample_dev",
+      "fileName": "Alex_Rivers_Resume_2026.pdf",
+      "fileSize": 245100,
+      "uploadedAt": "2026-09-09T05:08:42.206Z",
+      "expiresAt": "2026-09-16T05:08:42.206Z",
+      "isDeleted": false,
+      "filePath": "/app/applet/uploads/res_sample_1.pdf"
+    },
+    {
+      "id": "res_sample_2",
+      "userId": "usr_default",
+      "portfolioVersionId": "port_sample_design",
+      "fileName": "Maya_Lin_Product_Design.docx",
+      "fileSize": 182000,
+      "uploadedAt": "2026-09-04T05:08:42.206Z",
+      "expiresAt": "2026-09-11T05:08:42.206Z",
+      "isDeleted": true,
+      "deletedAt": "2026-09-11T05:08:42.206Z"
+    }
+  ],
+  "portfolios": [
+    {
+      "id": "port_72e33848",
+      "userId": "usr_default",
+      "userEmail": "laksanayuvaraj6@gmail.com",
+      "userName": "Laksana Yuvaraj",
+      "resumeId": "res_0b09009d",
+      "versionNumber": 2,
+      "createdAt": "2026-09-12T05:11:31.145Z",
+      "sourceResumeUploadDate": "2026-09-12T05:11:31.145Z",
+      "sourceResumeFileName": "resume_upd.pdf",
+      "sourceResumeDeleted": false,
+      "isCanonical": false,
+      "status": "active",
+      "isDeleted": false,
+      "data": {
+        "name": "Laksana Yuvaraj",
+        "title": "Final-Year AI & Data Science Undergraduate · Data Science & Data Analyst Intern",
+        "summary": "Final-year B.Sc. AI & Data Science undergraduate with hands-on experience in full-stack web development, data analysis, and AI-powered tools. Proven track record in translating raw data into actionable insights using SQL and Power BI, with a strong foundation in machine learning and cloud platforms. Seeking a Data Science or Data Analyst Intern position to apply analytical and technical skills to real-world business problems.",
+        "customTagline": "Driving business value through AI-powered analytics and full-stack development",
+        "profession": "data_scientist",
+        "avatarConfig": {
+          "archetype": "data_scientist",
+          "theme": "neon",
+          "intensity": "balanced",
+          "animationsEnabled": true,
+          "gender": "female",
+          "hasGlasses": true
+        },
+        "contact": {
+          "email": "laksanayuvaraj6@gmail.com",
+          "location": "Namakkal, Tamil Nadu, India (Open to Relocation)"
+        },
+        "links": {
+          "github": "https://github.com/Laksana-Yuvaraj"
+        },
+        "experience": [
+          {
+            "id": "exp_laksana_1",
+            "company": "NeuroNexus Innovations",
+            "role": "Web Development Intern",
+            "dates": "Apr 2025 - May 2025",
+            "description": "Building and maintaining responsive web applications.",
+            "highlights": [
+              "Built responsive web applications using modern front-end frameworks; improved UI performance and cross-browser compatibility.",
+              "Collaborated in an Agile team to design, code and deploy features; debugged live projects and ensured seamless UX across devices."
+            ],
+            "skillsUsed": [
+              "React",
+              "Front-end Frameworks",
+              "Agile",
+              "UI/UX"
+            ]
+          },
+          {
+            "id": "exp_laksana_2",
+            "company": "Rathna / Raghavendra Textiles (via Meesho)",
+            "role": "E-Commerce & Business Analytics Intern",
+            "dates": "Apr 2024 - Present",
+            "description": "Managing e-commerce operations and analytical insights for business growth.",
+            "highlights": [
+              "Managed Meesho storefront - product cataloguing, pricing strategy, and inventory for ethnic wear; achieved 15% increase in operational profitability.",
+              "Resolved pricing QC issues, optimised listings and planned PPC campaigns; building multi-platform expansion to Flipkart, Amazon & GlowRoad."
+            ],
+            "skillsUsed": [
+              "Data Analysis",
+              "E-commerce",
+              "Pricing Strategy",
+              "PPC Campaigns",
+              "QC"
+            ]
+          }
+        ],
+        "education": [
+          {
+            "id": "edu_laksana_1",
+            "institution": "Vivekanandha Arts & Science College for Women (VIAAS) - Periyar University",
+            "degree": "B.Sc.",
+            "field": "Artificial Intelligence & Data Science",
+            "dates": "Jul 2024 - Apr 2027",
+            "gpa": "8.7",
+            "highlights": [
+              "VIMS Scholar"
+            ]
+          },
+          {
+            "id": "edu_laksana_2",
+            "institution": "SSM Central School, Kuppandapalayam",
+            "degree": "Senior Secondary Education (Class XII)",
+            "field": "N/A",
+            "dates": "2023 - 2024",
+            "gpa": "81.4%",
+            "highlights": [
+              "VIMS Scholar"
+            ]
+          },
+          {
+            "id": "edu_laksana_3",
+            "institution": "Indu International School (ASM), Erode",
+            "degree": "Higher Secondary Education (Class X)",
+            "field": "N/A",
+            "dates": "2021 - 2022",
+            "gpa": "83.4%",
+            "highlights": [
+              "VIMS Scholar"
+            ]
+          }
+        ],
+        "skills": [
+          {
+            "category": "Languages & Databases",
+            "items": [
+              "Python",
+              "C",
+              "C++",
+              "SQL",
+              "HTML",
+              "CSS",
+              "MongoDB"
+            ]
+          },
+          {
+            "category": "AI / ML & Data",
+            "items": [
+              "Machine Learning",
+              "Deep Learning",
+              "Gen AI",
+              "LLMs",
+              "Power BI",
+              "Pandas",
+              "NumPy",
+              "Data Visualisation"
+            ]
+          },
+          {
+            "category": "Cloud & Web",
+            "items": [
+              "AWS Solutions Architecture",
+              "Google Cloud",
+              "Firebase",
+              "Front-end & Back-end Dev",
+              "Next.js",
+              "REST APIs",
+              "Kafka"
+            ]
+          },
+          {
+            "category": "Tools",
+            "items": [
+              "Microsoft Office",
+              "Salesforce Agentblazer",
+              "Adobe Photoshop",
+              "Coral Draw",
+              "Drone Dev",
+              "SDLC",
+              "Cybersecurity"
+            ]
+          },
+          {
+            "category": "Soft Skills",
+            "items": [
+              "Team Collaboration",
+              "Analytical Thinking",
+              "Problem Solving",
+              "Communication"
+            ]
+          }
+        ],
+        "projects": [
+          {
+            "id": "proj_laksana_1",
+            "title": "VIAAS-CONNECT - College Web App",
+            "description": "Full-stack college portal for student profiles, attendance tracking, and automated substitution alerts.",
+            "tags": [
+              "Google AI Studio",
+              "Firebase"
+            ],
+            "metrics": "Full-Stack Automated College Portal",
+            "featured": true
+          },
+          {
+            "id": "proj_laksana_2",
+            "title": "AI-Driven Marine Resource Management System",
+            "description": "AI decision-support system for marine conservation presented at a National Conference.",
+            "tags": [
+              "Research",
+              "AI"
+            ],
+            "metrics": "National Conference Research Publication",
+            "featured": true
+          },
+          {
+            "id": "proj_laksana_3",
+            "title": "VR Classrooms with Adaptive AI Tutors (Deep-IRT)",
+            "description": "Deep-IRT personalised learning framework presented at an International Conference.",
+            "tags": [
+              "Research",
+              "AI",
+              "VR"
+            ],
+            "metrics": "National Conference Research Publication",
+            "featured": true
+          }
+        ],
+        "certifications": [
+          {
+            "title": "Getting Started with AI",
+            "issuer": "IBM SkillsBuild",
+            "date": "Jul 2025"
+          },
+          {
+            "title": "Introduction to Large Language Models",
+            "issuer": "IBM SkillsBuild",
+            "date": "Jan 2026"
+          },
+          {
+            "title": "Solutions Architecture Job Simulation",
+            "issuer": "AWS",
+            "date": "Jan 2026"
+          },
+          {
+            "title": "Software Engineering Job Simulation",
+            "issuer": "J.P. Morgan",
+            "date": "Jan 2026"
+          },
+          {
+            "title": "Data Analysis & Forensic Technology",
+            "issuer": "Deloitte",
+            "date": "Mar 2026"
+          },
+          {
+            "title": "AI Fluency: Framework & Foundations",
+            "issuer": "Anthropic",
+            "date": "2026"
+          },
+          {
+            "title": "Resilience",
+            "issuer": "Nestlé Nesternship",
+            "date": "2026"
+          },
+          {
+            "title": "AI Sashakt Badge",
+            "issuer": "Intel/IndiaAI",
+            "date": "Apr 2026"
+          },
+          {
+            "title": "Agentblazer Champion",
+            "issuer": "Salesforce",
+            "date": "Apr 2026"
+          },
+          {
+            "title": "Google 5-Day AI Agent Intensive Course",
+            "issuer": "Google Analytics",
+            "date": "Aug 2025"
+          },
+          {
+            "title": "DataFlair - Power BI",
+            "issuer": "Google Analytics",
+            "date": "Aug 2025"
+          },
+          {
+            "title": "Animation & Graphics",
+            "issuer": "Adobe Photoshop & Coral Draw",
+            "date": "2025"
+          },
+          {
+            "title": "Full Stack Front End",
+            "issuer": "Naan Mudhalvan (TNSDCORP)",
+            "date": "Nov 2025"
+          },
+          {
+            "title": "Back End Development",
+            "issuer": "Naan Mudhalvan (TNSDCORP)",
+            "date": "Jun 2026"
+          },
+          {
+            "title": "30-Day Full Stack MasterClass",
+            "issuer": "NoviTech R&D",
+            "date": "Dec 2025"
+          },
+          {
+            "title": "Machine Learning with Python",
+            "issuer": "NoviTech R&D",
+            "date": "Dec 2025"
+          },
+          {
+            "title": "Full-Stack Dev with AI",
+            "issuer": "NoviTech R&D",
+            "date": "Dec 2025"
+          },
+          {
+            "title": "MS Copilot & Discover DA",
+            "issuer": "MongoDB | Reliance Drone Dev",
+            "date": "2025"
+          },
+          {
+            "title": "Web Dev",
+            "issuer": "NeuroNexus",
+            "date": "2025"
+          }
+        ]
+      }
+    },
+    {
+      "id": "port_sample_dev",
+      "userId": "usr_creator",
+      "userEmail": "laksanayuvaraj6@gmail.com",
+      "userName": "Laksana Yuvaraj",
+      "resumeId": "res_sample_1",
+      "versionNumber": 1,
+      "createdAt": "2026-09-09T05:08:42.206Z",
+      "sourceResumeUploadDate": "2026-09-09T05:08:42.206Z",
+      "sourceResumeFileName": "Alex_Rivers_Resume_2026.pdf",
+      "sourceResumeDeleted": false,
+      "isCanonical": true,
+      "status": "active",
+      "isDeleted": false,
+      "data": {
+        "name": "Alex Rivers",
+        "title": "Senior Full-Stack & AI Systems Engineer",
+        "summary": "Full-stack software architect specializing in scalable Node.js microservices, React 19, vector database search, and real-time LLM web applications.",
+        "profession": "developer",
+        "customTagline": "Building high-throughput AI interfaces and scalable distributed systems.",
+        "avatarConfig": {
+          "archetype": "developer",
+          "theme": "slate",
+          "intensity": "balanced",
+          "animationsEnabled": true,
+          "primaryColor": "#3b82f6"
+        },
+        "contact": {
+          "email": "alex.rivers.dev@example.com",
+          "phone": "+1 (555) 382-9102",
+          "location": "San Francisco, CA"
+        },
+        "links": {
+          "github": "https://github.com/alexrivers",
+          "linkedin": "https://linkedin.com/in/alexrivers-dev",
+          "website": "https://alexrivers.io",
+          "twitter": "https://x.com/alexrivers_code"
+        },
+        "experience": [
+          {
+            "id": "exp_1",
+            "company": "Aether Cloud Systems",
+            "role": "Lead AI Infrastructure Engineer",
+            "dates": "2023 - Present",
+            "location": "San Francisco, CA",
+            "description": "Directed the engineering team building automated Gemini AI agent pipelines serving 2M+ active sessions daily.",
+            "highlights": [
+              "Reduced server latency by 42% by migrating sync APIs to streaming WebSockets and Edge workers.",
+              "Architected real-time resume extraction engine processing 100k+ documents with 99.4% precision.",
+              "Mentored a team of 8 full-stack engineers across React, TypeScript, and Node.js microservices."
+            ],
+            "skillsUsed": [
+              "TypeScript",
+              "Node.js",
+              "React",
+              "Gemini API",
+              "Docker",
+              "Redis"
+            ]
+          },
+          {
+            "id": "exp_2",
+            "company": "Vanguard Cybernetics",
+            "role": "Senior Full-Stack Developer",
+            "dates": "2021 - 2023",
+            "location": "Austin, TX",
+            "description": "Engineered high-performance client dashboards and microservices for real-time telemetry monitoring.",
+            "highlights": [
+              "Developed interactive SVG canvas node graphs for infrastructure monitoring.",
+              "Implemented end-to-end OAuth2 authentication with multi-tenant workspace permissions."
+            ],
+            "skillsUsed": [
+              "React",
+              "Tailwind CSS",
+              "Express",
+              "PostgreSQL",
+              "GraphQL"
+            ]
+          }
+        ],
+        "education": [
+          {
+            "id": "edu_1",
+            "institution": "University of California, Berkeley",
+            "degree": "Bachelor of Science",
+            "field": "Computer Science & Artificial Intelligence",
+            "dates": "2017 - 2021",
+            "gpa": "3.92",
+            "highlights": [
+              "Magna Cum Laude",
+              "President of ACM Chapter",
+              "Algorithms Research Assistant"
+            ]
+          }
+        ],
+        "skills": [
+          {
+            "category": "Core Engineering",
+            "items": [
+              "TypeScript",
+              "JavaScript (ES2024)",
+              "Node.js",
+              "React 19",
+              "Python",
+              "Go",
+              "HTML5/CSS3"
+            ]
+          },
+          {
+            "category": "AI & Backend",
+            "items": [
+              "Gemini 3.6 API",
+              "Express.js",
+              "REST & GraphQL",
+              "WebSockets",
+              "Vector DBs (Qdrant)",
+              "PostgreSQL"
+            ]
+          },
+          {
+            "category": "DevOps & Tooling",
+            "items": [
+              "Docker & Cloud Run",
+              "Vite",
+              "Git/GitHub Actions",
+              "Tailwind CSS v4",
+              "Motion / Framer",
+              "Jest & Playwright"
+            ]
+          }
+        ],
+        "projects": [
+          {
+            "id": "proj_1",
+            "title": "NeuralSynth Live Audio Studio",
+            "description": "Browser-based generative AI synth streaming 24kHz real-time audio over WebSockets with visual equalizer spectrum.",
+            "tags": [
+              "React",
+              "TypeScript",
+              "Web Audio API",
+              "Gemini Live API"
+            ],
+            "demoUrl": "https://example.com/neuralsynth",
+            "githubUrl": "https://github.com/alexrivers/neuralsynth",
+            "metrics": "Over 45,000 active monthly sessions",
+            "featured": true
+          },
+          {
+            "id": "proj_2",
+            "title": "DocuPulse - Automated Document Parsing",
+            "description": "High-speed OCR & structured JSON extraction service built with Node.js and Gemini Multimodal vision.",
+            "tags": [
+              "Node.js",
+              "Gemini API",
+              "Express",
+              "Tailwind"
+            ],
+            "demoUrl": "https://example.com/docupulse",
+            "githubUrl": "https://github.com/alexrivers/docupulse",
+            "metrics": "Processes 1,200 pages/min",
+            "featured": true
+          }
+        ],
+        "certifications": [
+          {
+            "title": "Google Cloud Professional Cloud Architect",
+            "issuer": "Google Cloud",
+            "date": "2024"
+          },
+          {
+            "title": "AWS Certified Solutions Architect - Professional",
+            "issuer": "Amazon Web Services",
+            "date": "2023"
+          }
+        ]
+      }
+    },
+    {
+      "id": "port_sample_design",
+      "userId": "usr_default",
+      "userEmail": "user@example.com",
+      "userName": "Alex Rivers",
+      "resumeId": "res_sample_2",
+      "versionNumber": 2,
+      "createdAt": "2026-09-04T05:08:42.206Z",
+      "sourceResumeUploadDate": "2026-09-04T05:08:42.206Z",
+      "sourceResumeFileName": "Maya_Lin_Product_Design.docx",
+      "sourceResumeDeleted": true,
+      "sourceResumeDeletedAt": "2026-09-11T05:08:42.206Z",
+      "isCanonical": false,
+      "status": "active",
+      "isDeleted": true,
+      "deletedAt": "2026-09-11T05:08:42.206Z",
+      "deletedReason": "automatic_cleanup",
+      "data": {
+        "name": "Maya Lin",
+        "title": "Lead Product & Interactive Motion Designer",
+        "summary": "Crafting spatial user experiences, fluid motion systems, and accessible design tokens for next-generation creative tools.",
+        "profession": "designer",
+        "customTagline": "Designing delightful interfaces and human-centered motion design.",
+        "avatarConfig": {
+          "archetype": "designer",
+          "theme": "pastel",
+          "intensity": "dynamic",
+          "animationsEnabled": true,
+          "primaryColor": "#ec4899"
+        },
+        "contact": {
+          "email": "maya.lin.design@example.com",
+          "phone": "+1 (555) 839-2041",
+          "location": "New York, NY"
+        },
+        "links": {
+          "github": "https://github.com/mayalin-design",
+          "linkedin": "https://linkedin.com/in/mayalin-design",
+          "website": "https://mayalin.design"
+        },
+        "experience": [
+          {
+            "id": "exp_d1",
+            "company": "Lumina Creative Labs",
+            "role": "Staff Product Designer",
+            "dates": "2022 - Present",
+            "location": "New York, NY",
+            "description": "Led visual refresh and component design system for dynamic canvas editing platform.",
+            "highlights": [
+              "Created a unified motion palette and token architecture used across 12 product surface teams.",
+              "Increased user onboarding conversion by 34% through interactive micro-illustrations."
+            ],
+            "skillsUsed": [
+              "Figma",
+              "Design Systems",
+              "Motion Graphics",
+              "SVG Animation",
+              "Tailwind"
+            ]
+          }
+        ],
+        "education": [
+          {
+            "id": "edu_d1",
+            "institution": "Rhode Island School of Design (RISD)",
+            "degree": "Bachelor of Fine Arts",
+            "field": "Graphic & Interactive Media Design",
+            "dates": "2018 - 2022",
+            "highlights": [
+              "First Class Honors",
+              "Annual Design Exhibition Winner"
+            ]
+          }
+        ],
+        "skills": [
+          {
+            "category": "Design & Motion",
+            "items": [
+              "UX/UI Design",
+              "Figma",
+              "Interactive Prototyping",
+              "Design Systems",
+              "Lottie & Rive",
+              "SVG Animation"
+            ]
+          },
+          {
+            "category": "Frontend Capabilities",
+            "items": [
+              "HTML5/CSS3",
+              "Tailwind CSS",
+              "Framer Motion",
+              "Component Architecture",
+              "Accessibility (WCAG AA)"
+            ]
+          }
+        ],
+        "projects": [
+          {
+            "id": "proj_d1",
+            "title": "Kinetix Design Token Studio",
+            "description": "Open-source visual editor to create, test, and export animated CSS variables and tokens.",
+            "tags": [
+              "Design System",
+              "Figma Plugin",
+              "React",
+              "Tailwind"
+            ],
+            "demoUrl": "https://example.com/kinetix",
+            "metrics": "Featured on Product Hunt Top 3",
+            "featured": true
+          }
+        ]
+      }
+    }
+  ],
+  "lastCleanupRunAt": "2026-09-12T05:19:45.209Z"
+}
