@@ -1,6 +1,6 @@
 import { GoogleGenAI } from '@google/genai';
 import { PortfolioData, ProfessionArchetype } from '../src/types';
-
+import mammoth from 'mammoth';
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY || '',
   httpOptions: {
@@ -64,8 +64,7 @@ Required JSON structure:
   "links": {
     "github": "github.com/...",
     "linkedin": "linkedin.com/...",
-    "website": "portfolio or personal site URL",
-    "twitter": "twitter/x URL"
+    "website": "portfolio or personal site URL"
   },
   "experience": [
     {
@@ -115,22 +114,69 @@ Required JSON structure:
 
 Return ONLY valid JSON.`;
 
-  // Build content parts
+ // Build content parts
   const parts: any[] = [];
+  const lowerFileName = (fileName || '').toLowerCase();
 
+  // 1. Plain Text input alone
   if (pastedText && pastedText.trim().length > 0) {
     parts.push({
       text: `Resume Text Content:\n${pastedText}\n\n${promptText}`,
     });
-  } else if (fileBuffer && mimeType) {
-    if (mimeType.startsWith('text/') || mimeType === 'application/json') {
+  } 
+  // 2. Uploaded File Buffer
+  else if (fileBuffer) {
+    // 2a. Word Documents (.docx, .doc)
+    if (
+      lowerFileName.endsWith('.docx') ||
+      lowerFileName.endsWith('.doc') ||
+      mimeType?.includes('word') ||
+      mimeType?.includes('officedocument')
+    ) {
+      try {
+        const docxResult = await mammoth.extractRawText({ buffer: fileBuffer });
+        parts.push({
+          text: `Resume Document Text (${fileName}):\n${docxResult.value}\n\n${promptText}`,
+        });
+      } catch (err: any) {
+        throw new Error('Failed to parse Word document: ' + err.message);
+      }
+    }
+    // 2b. HTML Files (.html, .htm)
+    else if (
+      lowerFileName.endsWith('.html') ||
+      lowerFileName.endsWith('.htm') ||
+      mimeType === 'text/html'
+    ) {
+      const rawHtml = fileBuffer.toString('utf-8');
+      const cleanHtmlText = rawHtml
+        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ' ')
+        .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, ' ')
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      parts.push({
+        text: `Resume HTML Extracted Text (${fileName}):\n${cleanHtmlText}\n\n${promptText}`,
+      });
+    }
+    // 2c. Text Files (.txt)
+    else if (
+      mimeType?.startsWith('text/') ||
+      mimeType === 'application/json' ||
+      lowerFileName.endsWith('.txt')
+    ) {
       parts.push({
         text: `Resume Document Text (${fileName}):\n${fileBuffer.toString('utf-8')}\n\n${promptText}`,
       });
-    } else {
+    }
+    // 2d. PDF or Images
+    else {
       parts.push({
         inlineData: {
-          mimeType: mimeType === 'application/pdf' ? 'application/pdf' : 'image/jpeg',
+          mimeType: (mimeType === 'application/pdf' || lowerFileName.endsWith('.pdf'))
+            ? 'application/pdf'
+            : 'image/jpeg',
           data: fileBuffer.toString('base64'),
         },
       });
@@ -142,8 +188,8 @@ Return ONLY valid JSON.`;
     throw new Error('No resume content or file provided for AI parsing.');
   }
 
-  // Model cascade: try 'gemini-3.8-flash' first, then 'gemini-3.1-flash-lite'
-  const candidateModels = ['gemini-3.8-flash', 'gemini-3.1-flash-lite'];
+  // Model cascade: Valid Google Gemini models
+  const candidateModels = ['gemini-2.5-flash', 'gemini-1.5-flash'];
   let parsedRaw: any = null;
   let lastError: any = null;
 
@@ -152,13 +198,11 @@ Return ONLY valid JSON.`;
       console.log(`🤖 Attempting resume parsing with ${modelName}...`);
       const response = await ai.models.generateContent({
         model: modelName,
-        contents: { parts },
+        contents: parts,
         config: {
           responseMimeType: 'application/json',
         },
       });
-
-      const text = response.text || '';
       if (text.trim().length > 0) {
         parsedRaw = JSON.parse(text);
         console.log(`✅ Successfully parsed resume using ${modelName}`);
