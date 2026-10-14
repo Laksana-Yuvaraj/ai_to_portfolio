@@ -21,37 +21,34 @@ const PORT = 3000;
 app.use(express.json({ limit: '25mb' }));
 app.use(express.urlencoded({ extended: true, limit: '25mb' }));
 
-// Multer storage setup
-const uploadsDir = path.join(process.cwd(), 'uploads');
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadsDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    const ext = path.extname(file.originalname) || '.pdf';
-    cb(null, `resume-${uniqueSuffix}${ext}`);
-  },
-});
+// Multer memory storage setup (avoids read-only disk crashes on Vercel)
+const storage = multer.memoryStorage();
 const upload = multer({
   storage,
-  limits: { fileSize: 15 * 1024 * 1024 }, // 15MB limit
+  limits: { fileSize: 4.5 * 1024 * 1024 }, // Kept under Vercel serverless request body limits
 });
 
-// Run 7-day cleanup on startup and schedule hourly check
+// Run 7-day cleanup on startup and schedule periodic check
 console.log('🚀 Running initial 7-Day Resume Auto-Cleanup check...');
-const initialCleanup = run7DayResumeCleanup();
-if (initialCleanup.deletedCount > 0) {
-  console.log(`🧹 Auto-deleted ${initialCleanup.deletedCount} expired resume file(s).`);
+try {
+  const initialCleanup = run7DayResumeCleanup();
+  if (initialCleanup.deletedCount > 0) {
+    console.log(`🧹 Auto-deleted ${initialCleanup.deletedCount} expired resume file(s).`);
+  }
+} catch (err) {
+  console.warn('Initial cleanup skipped:', err);
 }
 
-setInterval(() => {
-  console.log('⏰ Executing scheduled 7-Day Resume Auto-Cleanup...');
-  const res = run7DayResumeCleanup();
-  if (res.deletedCount > 0) {
-    console.log(`🧹 Scheduled job auto-deleted ${res.deletedCount} expired resume file(s).`);
-  }
-}, 60 * 60 * 1000); // Check every 1 hour
+// Scheduled check only when running long-lived local server
+if (!process.env.VERCEL) {
+  setInterval(() => {
+    console.log('⏰ Executing scheduled 7-Day Resume Auto-Cleanup...');
+    const res = run7DayResumeCleanup();
+    if (res.deletedCount > 0) {
+      console.log(`🧹 Scheduled job auto-deleted ${res.deletedCount} expired resume file(s).`);
+    }
+  }, 60 * 60 * 1000);
+}
 
 // --- API ROUTES ---
 
@@ -62,7 +59,7 @@ app.get('/api/health', (req, res) => {
 
 // --- AUTHENTICATION & PERSONALISED ACCESS ROUTES ---
 
-// List all available profiles (for easy account switching)
+// List all available profiles
 app.get('/api/auth/users', (req, res) => {
   const db = readDB();
   const usersWithCounts = db.users.map((u) => ({
@@ -188,7 +185,7 @@ app.get('/api/cleanup/status', (req, res) => {
   res.json(stats);
 });
 
-// Manually Trigger 7-Day Cleanup Worker (for live UI demonstration)
+// Manually Trigger 7-Day Cleanup Worker
 app.post('/api/admin/run-cleanup', (req, res) => {
   const result = run7DayResumeCleanup();
   const stats = getCleanupStats();
@@ -200,7 +197,7 @@ app.post('/api/admin/run-cleanup', (req, res) => {
   });
 });
 
-// Upload Resume & Parse into Portfolio Version
+// Upload Resume & Parse into Portfolio Version (In-Memory Buffer)
 app.post('/api/resumes/upload', upload.single('resumeFile'), async (req, res) => {
   try {
     const file = req.file;
@@ -211,11 +208,8 @@ app.post('/api/resumes/upload', upload.single('resumeFile'), async (req, res) =>
       return res.status(400).json({ error: 'Please upload a resume file (PDF/DOCX/TXT) or paste resume text.' });
     }
 
-    let fileBuffer: Buffer | undefined;
-    if (file) {
-      fileBuffer = fs.readFileSync(file.path);
-    }
-
+    // Read directly from the in-memory buffer supplied by memoryStorage
+    const fileBuffer: Buffer | undefined = file ? file.buffer : undefined;
     const fileName = file ? file.originalname : 'Pasted_Resume.txt';
     const mimeType = file ? file.mimetype : 'text/plain';
 
@@ -224,16 +218,13 @@ app.post('/api/resumes/upload', upload.single('resumeFile'), async (req, res) =>
 
     const db = readDB();
 
-    // Unique Portfolio ID
     const portfolioId = `port_${crypto.randomBytes(4).toString('hex')}`;
     const resumeId = `res_${crypto.randomBytes(4).toString('hex')}`;
 
-    // Calculate version number for user
     const userPortfolios = db.portfolios.filter((p) => p.userId === userId);
     const versionNumber = userPortfolios.length + 1;
     const user = db.users.find((u) => u.id === userId);
 
-    // 7 Days Expiration Timestamp
     const uploadedAtDate = new Date();
     const expiresAtDate = new Date(uploadedAtDate.getTime() + 7 * 24 * 60 * 60 * 1000);
 
@@ -248,7 +239,7 @@ app.post('/api/resumes/upload', upload.single('resumeFile'), async (req, res) =>
       sourceResumeUploadDate: uploadedAtDate.toISOString(),
       sourceResumeFileName: fileName,
       sourceResumeDeleted: false,
-      isCanonical: userPortfolios.length === 0, // Make canonical if first portfolio
+      isCanonical: userPortfolios.length === 0,
       status: 'active',
       isDeleted: false,
       data: parsedData,
@@ -263,10 +254,9 @@ app.post('/api/resumes/upload', upload.single('resumeFile'), async (req, res) =>
       uploadedAt: uploadedAtDate.toISOString(),
       expiresAt: expiresAtDate.toISOString(),
       isDeleted: false,
-      filePath: file ? file.path : undefined,
+      filePath: undefined, // Memory storage requires no physical file path
     };
 
-    // If this is set as canonical, unmark others for user
     if (newPortfolio.isCanonical) {
       db.portfolios.forEach((p) => {
         if (p.userId === userId) p.isCanonical = false;
@@ -291,7 +281,7 @@ app.post('/api/resumes/upload', upload.single('resumeFile'), async (req, res) =>
   }
 });
 
-// List all portfolio versions for dashboard (STRICT USER ISOLATION + CREATOR AUDIT VISIBILITY)
+// List all portfolio versions for dashboard
 app.get('/api/portfolios', (req, res) => {
   const db = readDB();
   const userId = (req.query.userId as string) || (req.headers['x-user-id'] as string);
@@ -300,7 +290,6 @@ app.get('/api/portfolios', (req, res) => {
   const viewAll = req.query.viewAll === 'true';
   const includeDeleted = req.query.includeDeleted === 'true';
 
-  // If creator requests Master View (all created & deleted portfolios), return complete database
   if (isCreator && viewAll) {
     return res.json({
       portfolios: db.portfolios,
@@ -318,8 +307,6 @@ app.get('/api/portfolios', (req, res) => {
     });
   }
 
-  // Strictly return portfolios belonging to this user
-  // Non-deleted by default; if includeDeleted=true (or creator), include deleted versions too
   const portfolios = db.portfolios.filter((p) => {
     if (p.userId !== userId) return false;
     if (!includeDeleted && p.isDeleted) return false;
@@ -334,7 +321,7 @@ app.get('/api/portfolios', (req, res) => {
   });
 });
 
-// Creator Master Audit endpoint: gives the app creator full visibility of all portfolios ever created & deleted
+// Creator Master Audit endpoint
 app.get('/api/creator/audit', (req, res) => {
   const db = readDB();
   const total = db.portfolios.length;
@@ -362,7 +349,7 @@ app.get('/api/creator/audit', (req, res) => {
   });
 });
 
-// Get single portfolio version by ID (Permanent URL Endpoint - REMAINS LIVE EVEN IF DELETED!)
+// Get single portfolio version by ID
 app.get('/api/portfolios/:id', (req, res) => {
   const db = readDB();
   const portfolio = db.portfolios.find((p) => p.id === req.params.id);
@@ -459,7 +446,7 @@ app.delete('/api/resumes/:id', (req, res) => {
   });
 });
 
-// Delete Portfolio Version (SOFT DELETION: permanent link remains active and accessible forever!)
+// Delete Portfolio Version
 app.delete('/api/portfolios/:id', (req, res) => {
   const portfolioId = req.params.id;
   const reason = (req.body?.reason as any) || 'user_deleted';
@@ -471,7 +458,7 @@ app.delete('/api/portfolios/:id', (req, res) => {
 
   res.json({
     success: true,
-    message: 'Portfolio removed from active list. The public link remains live forever and record is saved in creator audit!',
+    message: 'Portfolio removed from active list.',
     portfolio: result.portfolio,
   });
 });
@@ -503,11 +490,13 @@ app.post('/api/portfolios/:id/auto-clean', (req, res) => {
 
   res.json({
     success: true,
-    message: 'Portfolio marked as automatically cleaned. Public link remains live forever!',
+    message: 'Portfolio marked as automatically cleaned.',
     portfolio: result.portfolio,
   });
 });
-// Only listen when running locally, not in serverless mode
+
+// --- VITE / STATIC SERVING ---
+// Only bind static serving when executed as a local standalone Node server
 if (!process.env.VERCEL) {
   const distPath = path.join(process.cwd(), 'dist');
   if (fs.existsSync(distPath)) {
@@ -522,4 +511,5 @@ if (!process.env.VERCEL) {
   });
 }
 
+// Export Express app for Vercel Serverless Functions
 export default app;
