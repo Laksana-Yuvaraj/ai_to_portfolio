@@ -1,19 +1,28 @@
 import fs from 'fs';
 import path from 'path';
-import { PortfolioVersion, ResumeRecord, User, CleanupStats, PortfolioData } from '../src/types';
+import os from 'os';
+// 1. Add .js extension
+import { PortfolioVersion, ResumeRecord, User, CleanupStats, PortfolioData } from '../src/types.js';
 
-const DATA_DIR = path.join(process.cwd(), 'data');
-const UPLOADS_DIR = path.join(process.cwd(), 'uploads');
+// 2. Use /tmp on Vercel/serverless environments to avoid read-only filesystem crash
+const isVercel = Boolean(process.env.VERCEL);
+const BASE_DIR = isVercel ? os.tmpdir() : process.cwd();
+
+const DATA_DIR = path.join(BASE_DIR, 'data');
+const UPLOADS_DIR = path.join(BASE_DIR, 'uploads');
 const DB_FILE = path.join(DATA_DIR, 'db.json');
 
 // Ensure directories exist
-if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
+try {
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+  }
+  if (!fs.existsSync(UPLOADS_DIR)) {
+    fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+  }
+} catch (err) {
+  console.warn('Directory creation warning:', err);
 }
-if (!fs.existsSync(UPLOADS_DIR)) {
-  fs.mkdirSync(UPLOADS_DIR, { recursive: true });
-}
-
 interface DatabaseSchema {
   users: User[];
   resumes: ResumeRecord[];
