@@ -507,17 +507,10 @@ app.post('/api/portfolios/:id/auto-clean', (req, res) => {
     portfolio: result.portfolio,
   });
 });
-
-// --- VITE / STATIC SERVING ---
-async function startServer() {
-  if (process.env.NODE_ENV !== 'production') {
-    const vite = await createViteServer({
-      server: { middlewareMode: true },
-      appType: 'spa',
-    });
-    app.use(vite.middlewares);
-  } else {
-    const distPath = path.join(process.cwd(), 'dist');
+// Only listen when running locally, not in serverless mode
+if (!process.env.VERCEL) {
+  const distPath = path.join(process.cwd(), 'dist');
+  if (fs.existsSync(distPath)) {
     app.use(express.static(distPath));
     app.get('*', (req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
@@ -529,4 +522,4 @@ async function startServer() {
   });
 }
 
-startServer();
+export default app;
