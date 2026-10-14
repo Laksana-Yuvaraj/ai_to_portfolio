@@ -203,6 +203,7 @@ Return ONLY valid JSON.`;
           responseMimeType: 'application/json',
         },
       });
+      const text = response.text || '';
       if (text.trim().length > 0) {
         parsedRaw = JSON.parse(text);
         console.log(`✅ Successfully parsed resume using ${modelName}`);
