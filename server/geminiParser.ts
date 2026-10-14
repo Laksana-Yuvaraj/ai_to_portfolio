@@ -173,13 +173,11 @@ Return ONLY valid JSON.`;
     // 2d. PDF or Images
     else {
       parts.push({
-        inlineData: {
-          mimeType: (mimeType === 'application/pdf' || lowerFileName.endsWith('.pdf'))
-            ? 'application/pdf'
-            : 'image/jpeg',
-          data: fileBuffer.toString('base64'),
-        },
-      });
+  inlineData: {
+    data: fileBuffer.toString('base64'),
+    mimeType: 'application/pdf',
+  },
+});
       parts.push({
         text: promptText,
       });
