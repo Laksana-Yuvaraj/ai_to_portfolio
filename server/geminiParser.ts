@@ -1,5 +1,5 @@
 import { GoogleGenAI } from '@google/genai';
-import { PortfolioData, ProfessionArchetype } from '../src/types';
+import { PortfolioData, ProfessionArchetype } from '../src/types.js';
 import mammoth from 'mammoth';
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY || '',
