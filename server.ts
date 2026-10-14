@@ -12,7 +12,7 @@ import {
   getCleanupStats,
   softDeletePortfolio,
   restorePortfolio,
-} from './server/db';
+} from './server/db.js';
 import { parseResumeWithGemini } from './server/geminiParser';
 import { PortfolioVersion, ResumeRecord } from './src/types';
 
