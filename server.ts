@@ -3,7 +3,6 @@ import path from 'path';
 import fs from 'fs';
 import multer from 'multer';
 import crypto from 'crypto';
-import { createServer as createViteServer } from 'vite';
 import {
   readDB,
   writeDB,
