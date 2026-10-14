@@ -5,7 +5,21 @@ import mammoth from 'mammoth';
 // Initialize SDK cleanly
 const apiKey = process.env.GEMINI_API_KEY || '';
 const ai = new GoogleGenAI({ apiKey });
+export function cleanRepeats(text: string): string {
+  if (!text || typeof text !== 'string') return '';
+  let cleaned = text
+    .replace(/\b(\w+)(?:\s+\1\b){2,}/gi, '$1')
+    .replace(/(\b[\w\s]{2,30}\b)(?:\s+\1\b){2,}/gi, '$1')
+    .replace(/\s+/g, ' ')
+    .trim();
 
+  const standardMatches = cleaned.match(/\bstandard\b/gi);
+  if (standardMatches && standardMatches.length > 3) {
+    cleaned = cleaned.replace(/\bstandard\b/gi, '').replace(/\s+/g, ' ').trim();
+  }
+
+  return cleaned;
+}
 export async function parseResumeWithGemini(
   fileBuffer?: Buffer,
   mimeType?: string,
