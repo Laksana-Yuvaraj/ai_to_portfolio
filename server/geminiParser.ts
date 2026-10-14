@@ -1,36 +1,10 @@
 import { GoogleGenAI } from '@google/genai';
 import { PortfolioData, ProfessionArchetype } from '../src/types.js';
 import mammoth from 'mammoth';
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY || '',
-  httpOptions: {
-    headers: {
-      'User-Agent': 'aistudio-build',
-    },
-  },
-});
 
-/**
- * Remove word and phrase repetition loops (e.g. "standard standard standard...")
- */
-export function cleanRepeats(text: string): string {
-  if (!text || typeof text !== 'string') return '';
-  let cleaned = text
-    // Replace 2+ repetitions of same word
-    .replace(/\b(\w+)(?:\s+\1\b){2,}/gi, '$1')
-    // Replace 2+ repetitions of phrases up to 4 words
-    .replace(/(\b[\w\s]{2,30}\b)(?:\s+\1\b){2,}/gi, '$1')
-    .replace(/\s+/g, ' ')
-    .trim();
-
-  // If a string contains excessive occurrences of the word "standard"
-  const standardMatches = cleaned.match(/\bstandard\b/gi);
-  if (standardMatches && standardMatches.length > 3) {
-    cleaned = cleaned.replace(/\bstandard\b/gi, '').replace(/\s+/g, ' ').trim();
-  }
-
-  return cleaned;
-}
+// Initialize SDK cleanly
+const apiKey = process.env.GEMINI_API_KEY || '';
+const ai = new GoogleGenAI({ apiKey });
 
 export async function parseResumeWithGemini(
   fileBuffer?: Buffer,
@@ -53,9 +27,9 @@ Required JSON structure:
   "name": "Full Name",
   "title": "Professional Title / Target Role",
   "summary": "Compelling 2-4 sentence professional summary",
-  "customTagline": "Punchy hero tagline (e.g. 'Bridging Data Science and Machine Learning to drive business impact')",
+  "customTagline": "Punchy hero tagline",
   "profession": "One of: 'developer', 'designer', 'data_scientist', 'product_manager', 'marketer', 'executive', 'general'",
-  "gender": "One of: 'female', 'male' (detect from name/context, default to 'female' if female institution or name)",
+  "gender": "One of: 'female', 'male'",
   "contact": {
     "email": "email@example.com",
     "phone": "phone number",
@@ -73,7 +47,7 @@ Required JSON structure:
       "dates": "Start - End Date",
       "location": "Location",
       "description": "Concise summary of responsibilities and scope",
-      "highlights": ["Key achievement or metric 1", "Key achievement 2"],
+      "highlights": ["Key achievement 1", "Key achievement 2"],
       "skillsUsed": ["Skill 1", "Skill 2"]
     }
   ],
@@ -81,26 +55,26 @@ Required JSON structure:
     {
       "institution": "School or University Name",
       "degree": "Degree (e.g. B.Sc., B.Tech, M.S.)",
-      "field": "Field of Study (e.g. AI & Data Science)",
+      "field": "Field of Study",
       "dates": "Dates / Graduation Year",
-      "gpa": "GPA or Score (e.g. CGPA 8.7, 85%)",
+      "gpa": "GPA or Score",
       "highlights": ["Honors, scholarships, activities"]
     }
   ],
   "skills": [
     {
-      "category": "Category Name (e.g. Languages & Databases, AI / ML & Data, Cloud & Web, Tools, Soft Skills)",
+      "category": "Category Name",
       "items": ["Item 1", "Item 2"]
     }
   ],
   "projects": [
     {
-      "title": "Project or Publication Title",
-      "description": "Detailed description of what was built, problem solved, and impact",
-      "tags": ["Tech / Research Tag 1", "Tag 2"],
-      "demoUrl": "Demo link if any",
-      "githubUrl": "Repository link if any",
-      "metrics": "Impact metric (e.g. '15% boost', 'Published at National Conference')"
+      "title": "Project Title",
+      "description": "Description of project",
+      "tags": ["Tag 1", "Tag 2"],
+      "demoUrl": "",
+      "githubUrl": "",
+      "metrics": ""
     }
   ],
   "certifications": [
@@ -114,79 +88,40 @@ Required JSON structure:
 
 Return ONLY valid JSON.`;
 
- // Build content parts
-  const parts: any[] = [];
+  const contents: any[] = [];
   const lowerFileName = (fileName || '').toLowerCase();
 
-  // 1. Plain Text input alone
   if (pastedText && pastedText.trim().length > 0) {
-    parts.push({
-      text: `Resume Text Content:\n${pastedText}\n\n${promptText}`,
-    });
-  } 
-  // 2. Uploaded File Buffer
-  else if (fileBuffer) {
-    // 2a. Word Documents (.docx, .doc)
+    contents.push({ text: `Resume Content:\n${pastedText}\n\n${promptText}` });
+  } else if (fileBuffer) {
     if (
       lowerFileName.endsWith('.docx') ||
       lowerFileName.endsWith('.doc') ||
       mimeType?.includes('word') ||
       mimeType?.includes('officedocument')
     ) {
-      try {
-        const docxResult = await mammoth.extractRawText({ buffer: fileBuffer });
-        parts.push({
-          text: `Resume Document Text (${fileName}):\n${docxResult.value}\n\n${promptText}`,
-        });
-      } catch (err: any) {
-        throw new Error('Failed to parse Word document: ' + err.message);
-      }
-    }
-    // 2b. HTML Files (.html, .htm)
-    else if (
-      lowerFileName.endsWith('.html') ||
-      lowerFileName.endsWith('.htm') ||
-      mimeType === 'text/html'
+      const docxResult = await mammoth.extractRawText({ buffer: fileBuffer });
+      contents.push({ text: `Resume Text (${fileName}):\n${docxResult.value}\n\n${promptText}` });
+    } else if (
+      lowerFileName.endsWith('.txt') ||
+      mimeType?.startsWith('text/')
     ) {
-      const rawHtml = fileBuffer.toString('utf-8');
-      const cleanHtmlText = rawHtml
-        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ' ')
-        .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, ' ')
-        .replace(/<[^>]+>/g, ' ')
-        .replace(/\s+/g, ' ')
-        .trim();
-
-      parts.push({
-        text: `Resume HTML Extracted Text (${fileName}):\n${cleanHtmlText}\n\n${promptText}`,
+      contents.push({ text: `Resume Text:\n${fileBuffer.toString('utf-8')}\n\n${promptText}` });
+    } else {
+      // PDF or Image
+      const pdfBase64 = fileBuffer.toString('base64');
+      contents.push({
+        inlineData: {
+          mimeType: (mimeType === 'application/pdf' || lowerFileName.endsWith('.pdf'))
+            ? 'application/pdf'
+            : 'image/jpeg',
+          data: pdfBase64,
+        },
       });
+      contents.push({ text: promptText });
     }
-    // 2c. Text Files (.txt)
-    else if (
-      mimeType?.startsWith('text/') ||
-      mimeType === 'application/json' ||
-      lowerFileName.endsWith('.txt')
-    ) {
-      parts.push({
-        text: `Resume Document Text (${fileName}):\n${fileBuffer.toString('utf-8')}\n\n${promptText}`,
-      });
-    }
-    // 2d. PDF or Images
-    else {
-      parts.push({
-  inlineData: {
-    data: fileBuffer.toString('base64'),
-    mimeType: 'application/pdf',
-  },
-});
-      parts.push({
-        text: promptText,
-      });
-    }
-  } else {
-    throw new Error('No resume content or file provided for AI parsing.');
   }
 
-  // Model cascade: Valid Google Gemini models
   const candidateModels = ['gemini-2.0-flash', 'gemini-1.5-flash'];
   let parsedRaw: any = null;
   let lastError: any = null;
@@ -196,14 +131,17 @@ Return ONLY valid JSON.`;
       console.log(`🤖 Attempting resume parsing with ${modelName}...`);
       const response = await ai.models.generateContent({
         model: modelName,
-        contents: parts,
+        contents,
         config: {
           responseMimeType: 'application/json',
         },
       });
-      const text = response.text || '';
-      if (text.trim().length > 0) {
-        parsedRaw = JSON.parse(text);
+
+      const responseText = response.text?.trim() || '';
+      if (responseText.length > 0) {
+        // Strip markdown backticks if returned
+        const cleanedJson = responseText.replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim();
+        parsedRaw = JSON.parse(cleanedJson);
         console.log(`✅ Successfully parsed resume using ${modelName}`);
         break;
       }
@@ -214,14 +152,13 @@ Return ONLY valid JSON.`;
   }
 
   if (!parsedRaw) {
-    console.error('All AI models failed, using fallback parser:', lastError);
-    return createFallbackPortfolio(fileName, pastedText);
+    console.error('All AI models failed. Last error:', lastError);
+    // Instead of silently giving Taylor Morgan, throw an explicit error or pass name if known
+    throw new Error(`AI Parsing failed: ${lastError?.message || 'Check GEMINI_API_KEY in Vercel settings'}`);
   }
 
-  // Normalize and clean all fields thoroughly
   return normalizePortfolioData(parsedRaw);
 }
-
 export function normalizePortfolioData(raw: any): PortfolioData {
   const name = cleanRepeats(raw.name) || 'Professional Portfolio';
   let title = cleanRepeats(raw.title) || 'AI & Data Science Specialist';
