@@ -136,10 +136,10 @@ Return ONLY valid JSON.`;
     }
   }
 
-  const candidateModels = [
+ const candidateModels = [
+    'gemini-2.5-flash',
     'gemini-2.0-flash',
-    'gemini-1.5-flash-002',
-    'gemini-1.5-pro-002',
+    'gemini-2.0-flash-lite',
   ];
   let parsedRaw: any = null;
   let lastError: any = null;
