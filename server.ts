@@ -13,8 +13,8 @@ import {
   softDeletePortfolio,
   restorePortfolio,
 } from './server/db.js';
-import { parseResumeWithGemini } from './server/geminiParser';
-import { PortfolioVersion, ResumeRecord } from './src/types';
+import { parseResumeWithGemini } from './server/geminiParser.js';
+import { PortfolioVersion, ResumeRecord } from './src/types.js';
 
 const app = express();
 const PORT = 3000;
