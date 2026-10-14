@@ -189,7 +189,7 @@ Return ONLY valid JSON.`;
   }
 
   // Model cascade: Valid Google Gemini models
-  const candidateModels = ['gemini-2.5-flash', 'gemini-1.5-flash'];
+  const candidateModels = ['gemini-2.0-flash', 'gemini-1.5-flash'];
   let parsedRaw: any = null;
   let lastError: any = null;
 
