@@ -1667,13 +1667,15 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
             <div className="flex flex-wrap items-center justify-center gap-6 pt-4">
               {data.contact.email && (
                 <a
-                  href={`mailto:${data.contact.email}`}
+                  href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(data.contact.email)}&su=${encodeURIComponent('Inquiry from Portfolio')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className={`px-6 py-3.5 rounded-2xl font-bold shadow-lg transition-all flex items-center gap-2.5 ${currentTheme.accentBg}`}
                 >
                   <Mail className="w-5 h-5" />
                   <span>{data.contact.email}</span>
                 </a>
-              )}
+            )}
 
               {data.contact.phone && (
                 <div className="px-6 py-3.5 rounded-2xl bg-slate-800 text-slate-200 border border-slate-700 font-medium flex items-center gap-2">
