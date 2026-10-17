@@ -217,16 +217,8 @@ const sampleDesignerPortfolio: PortfolioData = {
 };
 
 function getInitialDB(): DatabaseSchema {
-  const creatorUser: User = {
-    id: 'usr_creator',
-    email: 'laksanayuvaraj6@gmail.com',
-    name: 'Laksana Yuvaraj',
-    username: 'laksanayuvaraj',
-    isCreator: true,
-  };
-
   return {
-    users: [creatorUser],
+    users: [],
     resumes: [],
     portfolios: [],
     lastCleanupRunAt: new Date().toISOString(),
