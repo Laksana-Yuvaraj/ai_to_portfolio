@@ -535,15 +535,35 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
     },
   };
 
-  const currentTheme =
-    aestheticThemeConfig[currentAestheticStyle] || aestheticThemeConfig.modern;
-  const topSkills = data.skills.flatMap((s) => s.items).slice(0, 6);
+  // Map customization theme keys to aesthetic tokens
+  const rawThemeKey = 
+    data.aestheticStyle || 
+    data.avatarConfig?.theme || 
+    config?.theme || 
+    'modern';
+
+  const themeKeyMap: Record<string, string> = {
+    slate: 'modern',
+    neon: 'cyberpunk',
+    pastel: 'minimalist',
+    midnight: 'cosmic_stars',
+    corporate: 'corporate',
+    cosmic_stars: 'cosmic_stars',
+    modern: 'modern',
+    minimalist: 'minimalist',
+    cyberpunk: 'cyberpunk',
+    warm_editorial: 'warm_editorial',
+  };
+
+  const activeThemeKey = themeKeyMap[rawThemeKey] || rawThemeKey;
+  const currentTheme = (aestheticThemeConfig as any)[activeThemeKey] || aestheticThemeConfig.modern;
+
+  const topSkills = data.skills?.flatMap((s) => s.items).slice(0, 6) || [];
 
   return (
-    <div className={`min-h-screen font-sans selection:bg-blue-500 selection:text-white transition-colors duration-300 relative ${currentTheme.bg}`}>
-      
-      {/* Glittering Stars Animated Background Layer for Cosmic Blue Style */}
-      {currentAestheticStyle === 'cosmic_stars' && (
+    <div className={`min-h-screen font-sans ${currentTheme.bg} transition-colors duration-500 relative`}>
+      {/* Glittering Stars Animated Background Layer for Cosmic/Midnight Styles */}
+      {(activeThemeKey === 'cosmic_stars' || rawThemeKey === 'midnight' || rawThemeKey === 'neon') && (
         <GlitteringStarsBackground isContained={false} count={110} />
       )}
 
