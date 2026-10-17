@@ -305,8 +305,42 @@ export const CustomizerModal: React.FC<CustomizerModalProps> = ({
 
   const handleSave = async () => {
     setIsSaving(true);
-    await onSave(data);
-    setIsSaving(false);
+
+    // Map theme to aesthetic style tokens
+    const themeToStyleMap: Record<string, string> = {
+      slate: 'modern',
+      neon: 'cyberpunk',
+      pastel: 'minimalist',
+      midnight: 'cosmic_stars',
+      corporate: 'corporate',
+      cosmic_stars: 'cosmic_stars',
+      modern: 'modern',
+      minimalist: 'minimalist',
+      cyberpunk: 'cyberpunk',
+    };
+
+    const chosenTheme = (data as any)?.avatarConfig?.theme || (data as any)?.theme || 'modern';
+    const computedAestheticStyle = themeToStyleMap[chosenTheme] || chosenTheme;
+
+    const payload = {
+      ...data,
+      aestheticStyle: computedAestheticStyle,
+      avatarConfig: {
+        ...(data as any)?.avatarConfig,
+        theme: chosenTheme,
+      },
+    };
+
+    try {
+      await onSave(payload);
+      if (typeof (props as any)?.onClose === 'function') {
+        (props as any).onClose();
+      }
+    } catch (err) {
+      console.error('Save failed:', err);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
