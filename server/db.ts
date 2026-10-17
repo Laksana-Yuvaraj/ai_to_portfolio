@@ -297,8 +297,8 @@ function getInitialDB(): DatabaseSchema {
 
   return {
     users: [creatorUser, defaultUser],
-    resumes: [sampleResumeDev, sampleResumeDesign],
-    portfolios: [sampleDevVersion, sampleDesignVersion],
+    resumes: [],
+    portfolios: [],
     lastCleanupRunAt: new Date().toISOString(),
   };
 }
