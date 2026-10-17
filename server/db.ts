@@ -223,86 +223,15 @@ function getInitialDB(): DatabaseSchema {
     name: 'Laksana Yuvaraj',
     username: 'laksanayuvaraj',
     isCreator: true,
-    canonicalPortfolioId: 'port_sample_dev',
-  };
-
-  const defaultUser: User = {
-    id: 'usr_default',
-    email: 'user@example.com',
-    name: 'Alex Rivers',
-    username: 'alexrivers',
-    canonicalPortfolioId: 'port_sample_dev',
-  };
-
-  const sampleDevVersion: PortfolioVersion = {
-    id: 'port_sample_dev',
-    userId: 'usr_creator',
-    userEmail: 'laksanayuvaraj6@gmail.com',
-    userName: 'Laksana Yuvaraj',
-    resumeId: 'res_sample_1',
-    versionNumber: 1,
-    createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 days ago
-    sourceResumeUploadDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-    sourceResumeFileName: 'Alex_Rivers_Resume_2026.pdf',
-    sourceResumeDeleted: false,
-    isCanonical: true,
-    status: 'active',
-    isDeleted: false,
-    data: sampleDeveloperPortfolio,
-  };
-
-  const sampleDesignVersion: PortfolioVersion = {
-    id: 'port_sample_design',
-    userId: 'usr_default',
-    userEmail: 'user@example.com',
-    userName: 'Alex Rivers',
-    resumeId: 'res_sample_2',
-    versionNumber: 2,
-    createdAt: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(), // 8 days ago
-    sourceResumeUploadDate: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
-    sourceResumeFileName: 'Maya_Lin_Product_Design.docx',
-    sourceResumeDeleted: true,
-    sourceResumeDeletedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-    isCanonical: false,
-    status: 'active',
-    isDeleted: true, // Example of deleted portfolio whose link remains live!
-    deletedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-    deletedReason: 'automatic_cleanup',
-    data: sampleDesignerPortfolio,
-  };
-
-  const sampleResumeDev: ResumeRecord = {
-    id: 'res_sample_1',
-    userId: 'usr_creator',
-    portfolioVersionId: 'port_sample_dev',
-    fileName: 'Alex_Rivers_Resume_2026.pdf',
-    fileSize: 245100,
-    uploadedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 days ago
-    expiresAt: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000).toISOString(), // expires in 4 days
-    isDeleted: false,
-    filePath: path.join(UPLOADS_DIR, 'res_sample_1.pdf'),
-  };
-
-  const sampleResumeDesign: ResumeRecord = {
-    id: 'res_sample_2',
-    userId: 'usr_default',
-    portfolioVersionId: 'port_sample_design',
-    fileName: 'Maya_Lin_Product_Design.docx',
-    fileSize: 182000,
-    uploadedAt: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(), // 8 days ago
-    expiresAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // expired 1 day ago
-    isDeleted: true,
-    deletedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
   };
 
   return {
-    users: [creatorUser, defaultUser],
+    users: [creatorUser],
     resumes: [],
     portfolios: [],
     lastCleanupRunAt: new Date().toISOString(),
   };
 }
-
 export function readDB(): DatabaseSchema {
   try {
     let db: DatabaseSchema;
