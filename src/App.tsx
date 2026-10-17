@@ -235,15 +235,37 @@ export default function App() {
 
   const handleSaveCustomizer = async (updatedData: PortfolioData) => {
     if (!customizerPortfolio) return;
+
+    // 1. Immediately update local state so the screen and currentPortfolio update instantly
+    setPortfolios((prev: any[]) =>
+      prev.map((p) =>
+        p.id === customizerPortfolio.id
+          ? { ...p, data: { ...p.data, ...updatedData } }
+          : p
+      )
+    );
+
+    // 2. Close modal immediately
+    setCustomizerPortfolio(null);
+
+    // 3. Persist to server
     try {
       const res = await fetch(`/api/portfolios/${customizerPortfolio.id}/data`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data: updatedData }),
+        body: JSON.stringify({ data: updatedData, ...updatedData }),
       });
 
-      if (res.ok && currentUser) {
-        setCustomizerPortfolio(null);
+      if (!res.ok) {
+        // Fallback for standard endpoint without /data suffix
+        await fetch(`/api/portfolios/${customizerPortfolio.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ data: updatedData }),
+        });
+      }
+
+      if (currentUser) {
         await fetchUserPortfolios(currentUser.id);
       }
     } catch (err) {
